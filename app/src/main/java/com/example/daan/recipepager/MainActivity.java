@@ -1,5 +1,6 @@
 package com.example.daan.recipepager;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (recipes != null) {
                         for (int i = 0; i < recipes.size(); i++) {
-                            loadIngredients(recipes.get(i), recipes.get(i).getRecipeId(), i);
+                            loadIngredients(recipes.get(i).getRecipeId(), i);
                         }
                     }
                 }
@@ -86,23 +88,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void loadIngredients(final Recipe recipe, String recipeId, final int totalAmount) {
+    public void loadIngredients(String recipeId, final int totalAmount) {
         Call<RecipeIngredientResponse> recipeCall = apiService.getRecipeIngredients(recipeId);
         recipeCall.enqueue(new Callback<RecipeIngredientResponse>() {
             @Override
             public void onResponse(Call<RecipeIngredientResponse> call,
                                    Response<RecipeIngredientResponse> response) {
                 if (response.isSuccessful()) {
-                    recipe.setIngredients(response.body().getRecipe().getIngredients());
+                    recipes.get(totalAmount).setIngredients(response.body().getRecipe().getIngredients());
 
                     if (totalAmount == 2) {
-                        initialiseAdapter();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                initialiseAdapter();
+                            }
+                        }, 2000);
+
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<RecipeIngredientResponse> call, Throwable t) {
+                List<String> temp = new ArrayList<>();
+                temp.add("Unable to fetch recipes");
+
+                recipes.get(totalAmount).setIngredients(temp);
             }
         });
     }

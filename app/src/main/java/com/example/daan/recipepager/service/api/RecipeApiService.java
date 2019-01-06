@@ -19,10 +19,10 @@ public interface RecipeApiService {
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
-    @GET("search?key=630b229d337167afb9b0541af7fd7e62&sort=t&count=3")
+    @GET("search?key=3a6f07825af7780d799a76b243fa5de9&sort=t&count=3")
     Call<RecipeResponse> getTrendingRecipes();
 
-    @GET("get?key=630b229d337167afb9b0541af7fd7e62")
+    @GET("get?key=3a6f07825af7780d799a76b243fa5de9")
     Call<RecipeIngredientResponse> getRecipeIngredients(
             @Query(value = "rId") String recipeId
     );
