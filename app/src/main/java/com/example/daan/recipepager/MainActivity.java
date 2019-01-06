@@ -72,8 +72,10 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     recipes = response.body().getRecipes();
 
-                    for (int i = 0; i < recipes.size(); i++) {
-                        loadIngredients(recipes.get(i), recipes.get(i).getRecipeId(), i);
+                    if (recipes != null) {
+                        for (int i = 0; i < recipes.size(); i++) {
+                            loadIngredients(recipes.get(i), recipes.get(i).getRecipeId(), i);
+                        }
                     }
                 }
             }
